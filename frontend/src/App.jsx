@@ -1,11 +1,11 @@
 import Navbar from "./components/Navbar"
 import Hero from "./components/Hero"
-import About from "./components/About"
-import Skills from "./components/Skills"
-import Education from "./components/Education"
-import Projects from "./components/Projects"
-import Experience from "./components/Experience"
-import Contact from "./components/Contact"
+import About from "./pages/About"
+import Skills from "./pages/Skills"
+import Education from "./pages/Education"
+import Projects from "./pages/Projects"
+import Experience from "./pages/Experience"
+import Contact from "./pages/Contact"
 import Footer from "./components/Footer"
 
 function App() {

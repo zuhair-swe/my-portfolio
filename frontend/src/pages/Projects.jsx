@@ -1,20 +1,6 @@
+import projects from "../data/projects";
+
 function Projects() {
-
-  const projects = [
-    {
-      name: "LMS System",
-      description: "Learning management system built with MERN stack"
-    },
-    {
-      name: "Portfolio Website",
-      description: "Personal developer portfolio using React"
-    },
-    {
-      name: "Student Management",
-      description: "CRUD system for managing students"
-    }
-  ]
-
   return (
     <section id="projects" className="section">
 
