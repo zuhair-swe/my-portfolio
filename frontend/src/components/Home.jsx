@@ -1,4 +1,11 @@
+import { useEffect } from "react";
+import API from "../services/api";
 function Home() {
+  useEffect(() => {
+    API.get("/api")
+      .then(res => console.log("response recieved", res.data))
+      .catch(err => console.log(err));
+  }, []);
   return (
     <div className="portfolio-container">
       
@@ -40,3 +47,4 @@ function Home() {
 }
 
 export default Home;
+

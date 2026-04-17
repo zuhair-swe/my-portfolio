@@ -1,7 +1,17 @@
 import profile from "../assets/profile.jpg"
+import { useState, useEffect } from "react";
+import API from "../services/api";
+
 
 function Hero() {
- 
+  const [resume, setResume] = useState("");
+
+  useEffect(() => {
+  API.get("/api/resume")
+    .then(res => setResume(res.data))
+    .catch(err => console.log(err));
+}, []);
+
   return (
     <section id="hero" className="hero">
 
@@ -16,10 +26,18 @@ function Hero() {
         </p>
 
         <div className="hero-buttons">
-          <a href="#projects">
-          <button className="btn">View Projects</button>
-          </a>
-          <button className="btn-outline">Contact Me</button>
+
+    <a href={`http://localhost:5000/${resume.fileUrl}`} target="_blank">
+      <button className="btn">
+            View Resume
+          </button>
+    </a>
+
+    <a href={`http://localhost:5000/${resume.fileUrl}`} download>
+      <button className="btn-outline">
+            Download Resume
+          </button>
+    </a>
         </div>
       </div>
 

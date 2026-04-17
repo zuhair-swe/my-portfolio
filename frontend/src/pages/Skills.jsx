@@ -1,29 +1,31 @@
+import { useEffect, useState } from "react";
+import API from "../services/api";
+
 function Skills() {
 
-  const skills = [
-    "HTML",
-    "CSS",
-    "JavaScript",
-    "React",
-    "Node.js",
-    "MongoDB",
-    "Express",
-    "Git"
-  ]
+const [skills,setSkills] = useState([]);
 
-  return (
-    <section id="skills" className="section">
+useEffect(()=>{
+  API.get("/api/skills")
+    .then(res=>setSkills(res.data))
+    .catch(err=>console.log(err));
+},[]);
 
-      <h2>Skills</h2>
+return (
+<section id="skills" className="section">
 
-      <div className="skills-grid">
-        {skills.map(skill => (
-          <div className="skill-card">{skill}</div>
-        ))}
-      </div>
+<h2>Skills</h2>
 
-    </section>
-  )
+<div className="skills-grid">
+{skills.map(skill => (
+<div className="skill-card" key={skill._id}>
+{skill.name}
+</div>
+))}
+</div>
+
+</section>
+)
 }
 
-export default Skills
+export default Skills;

@@ -1,24 +1,31 @@
-import projects from "../data/projects";
+import { useEffect, useState } from "react";
+import API from "../services/api";
 
 function Projects() {
-  return (
-    <section id="projects" className="section">
 
-      <h2>Projects</h2>
+const [projects,setProjects] = useState([]);
 
-      <div className="projects-grid">
+useEffect(()=>{
+  API.get("/api/projects")
+    .then(res=>setProjects(res.data))
+    .catch(err=>console.log(err));
+},[]);
 
-        {projects.map(project => (
-          <div className="project-card">
-            <h3>{project.name}</h3>
-            <p>{project.description}</p>
-          </div>
-        ))}
+return (
+<section id="projects" className="section">
+<h2>Projects</h2>
 
-      </div>
+<div className="projects-grid">
+{projects.map(project => (
+<div className="project-card" key={project._id}>
+<h3>{project.name}</h3>
+<p>{project.description}</p>
+</div>
+))}
+</div>
 
-    </section>
-  )
+</section>
+)
 }
 
-export default Projects
+export default Projects;
