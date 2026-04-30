@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
 import API from "../services/api";
-import { 
-  FaTachometerAlt, 
-  FaProjectDiagram, 
-  FaEnvelope, 
-  FaSignOutAlt 
+import {
+  FaTachometerAlt,
+  FaProjectDiagram,
+  FaEnvelope,
+  FaSignOutAlt
 } from "react-icons/fa";
 import { NavLink } from "react-router-dom";
 function Admin() {
   const [messages, setMessages] = useState([]);
-  const [skill,setSkill] = useState("");
-  const [resume,setResume] = useState(null);
-  const [projects,setProjects] = useState([]);
+  const [skill, setSkill] = useState("");
+  const [resume, setResume] = useState(null);
+  const [projects, setProjects] = useState([]);
 
   useEffect(() => {
     API.get("/api/contact")
@@ -19,10 +19,10 @@ function Admin() {
       .catch(err => console.log(err));
   }, []);
 
-  useEffect(()=>{
+  useEffect(() => {
     API.get("/api/projects")
-    .then(res=>setProjects(res.data));
-  },[]);
+      .then(res => setProjects(res.data));
+  }, []);
 
   const deleteMessage = async (id) => {
     await API.delete(`/api/contact/${id}`);
@@ -34,22 +34,22 @@ function Admin() {
     window.location.href = "/admin-login";
   };
 
-  const [project,setProject] = useState({
-    name:"",
-    description:"",
-    github:""
+  const [project, setProject] = useState({
+    name: "",
+    description: "",
+    github: ""
   });
 
-  const deleteSkill = async(id)=>{
+  const deleteSkill = async (id) => {
     await API.delete(`/api/skills/${id}`);
   };
 
-  const deleteProject = async (id)=>{
+  const deleteProject = async (id) => {
     await API.delete(`/api/projects/${id}`);
     alert("Project deleted");
   };
 
-  const uploadResume = async (e)=>{
+  const uploadResume = async (e) => {
     e.preventDefault();
     const formData = new FormData();
     formData.append("resume", resume);
@@ -57,64 +57,80 @@ function Admin() {
     alert("Resume Uploaded");
   };
 
-  const addSkill = async (e)=>{
+  const addSkill = async (e) => {
     e.preventDefault();
-    await API.post("/api/skills",{name:skill});
+
+    if (!skill.trim()) {
+      alert("Skill cannot be empty");
+      return;
+    }
+
+    await API.post("/api/skills", { name: skill });
     setSkill("");
   };
 
-  const addProject = async (e)=>{
+  const addProject = async (e) => {
     e.preventDefault();
-    await API.post("/api/projects",project);
+
+    if (
+      !project.name.trim() ||
+      !project.description.trim() ||
+      !project.github.trim()
+    ) {
+      alert("All fields are required");
+      return;
+    }
+
+    await API.post("/api/projects", project);
     alert("Project Added");
+
     setProject({
-      name:"",
-      description:"",
-      github:""
+      name: "",
+      description: "",
+      github: ""
     });
   };
-
   return (
     <div className="admin-layout">
 
       {/* SIDEBAR */}
-     <aside className="admin-sidebar">
-  <div>
-    <div className="admin-logo">Admin Panel</div>
+      <aside className="admin-sidebar">
+        <div>
+          <div className="admin-logo">Admin Panel</div>
 
-    <nav className="admin-menu">
+          <nav className="admin-menu">
 
-      <NavLink 
-        to="/admin" 
-        end
-        className={({isActive}) => isActive ? "active" : ""}
-      >
-        <FaTachometerAlt /> Dashboard
-      </NavLink>
+            <NavLink
+              to="/admin"
+              end
+              className={({ isActive }) => isActive ? "active" : ""}
+            >
+              <FaTachometerAlt /> Dashboard
+            </NavLink>
 
-      <NavLink 
-        to="/#projects"
-        className={({isActive}) => isActive ? "active" : ""}
-      >
-        <FaProjectDiagram /> Projects
-      </NavLink>
+            <NavLink
+              to="/#projects"
+              className={({ isActive }) => isActive ? "active" : ""}
+            >
+              <FaProjectDiagram /> Projects
+            </NavLink>
 
-      <NavLink 
-        to="/admin/messages"
-        className={({isActive}) => isActive ? "active" : ""}
-      >
-        <FaEnvelope /> Messages
-      </NavLink>
+            <NavLink
+              to="/admin/messages"
+              className={({ isActive }) => isActive ? "active" : ""}
+            >
+              <FaEnvelope /> Messages
+            </NavLink>
 
-    </nav>
-  </div>
+          </nav>
+        </div>
 
-  <div className="admin-logout">
-    <button onClick={logout}>
-      <FaSignOutAlt /> Logout
-    </button>
-  </div>
-</aside>
+        <div className="admin-logout">
+          <button onClick={logout}>
+            <FaSignOutAlt /> Logout
+          </button>
+        </div>
+      </aside>
 
       {/* CONTENT */}
       <main className="admin-content">
@@ -129,12 +145,14 @@ function Admin() {
           <div className="admin-card">
             <h2>Upload Resume</h2>
             <form onSubmit={uploadResume}>
-              <input 
+              <input
                 type="file"
                 accept="application/pdf"
-                onChange={(e)=>setResume(e.target.files[0])}
+                onChange={(e) => setResume(e.target.files[0])}
               />
-              <button className="btn">Upload Resume</button>
+              <button className="btn" disabled={resume === null}>
+                Upload Resume
+              </button>            
             </form>
           </div>
 
@@ -142,22 +160,22 @@ function Admin() {
           <div className="admin-card">
             <h2>Add Project</h2>
             <form onSubmit={addProject}>
-              <input 
+              <input
                 placeholder="Project Name"
                 value={project.name}
-                onChange={(e)=>setProject({...project,name:e.target.value})}
+                onChange={(e) => setProject({ ...project, name: e.target.value })}
               />
 
-              <input 
+              <input
                 placeholder="Description"
                 value={project.description}
-                onChange={(e)=>setProject({...project,description:e.target.value})}
+                onChange={(e) => setProject({ ...project, description: e.target.value })}
               />
 
-              <input 
+              <input
                 placeholder="Github Link"
                 value={project.github}
-                onChange={(e)=>setProject({...project,github:e.target.value})}
+                onChange={(e) => setProject({ ...project, github: e.target.value })}
               />
 
               <button className="btn">Add Project</button>
@@ -168,10 +186,10 @@ function Admin() {
           <div className="admin-card">
             <h2>Add Skill</h2>
             <form onSubmit={addSkill}>
-              <input 
+              <input
                 placeholder="Skill"
                 value={skill}
-                onChange={(e)=>setSkill(e.target.value)}
+                onChange={(e) => setSkill(e.target.value)}
               />
               <button className="btn">Add Skill</button>
             </form>
@@ -181,12 +199,12 @@ function Admin() {
           <div className="admin-card full">
             <h2>Projects</h2>
 
-            {projects.map(p=>(
+            {projects.map(p => (
               <div className="admin-list" key={p._id}>
                 <span>{p.name}</span>
-                <button 
+                <button
                   className="btn"
-                  onClick={()=>deleteProject(p._id)}
+                  onClick={() => deleteProject(p._id)}
                 >
                   Delete
                 </button>
@@ -217,7 +235,7 @@ function Admin() {
                     <td title={msg.message}>{msg.message}</td>
                     <td>{new Date(msg.createdAt).toLocaleString()}</td>
                     <td>
-                      <button 
+                      <button
                         className="btn"
                         onClick={() => deleteMessage(msg._id)}
                       >
